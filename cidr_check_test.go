@@ -212,3 +212,35 @@ func TestCIDRIsContainsIP(t *testing.T) {
 		assert.Equal(t, grid.expected, actual)
 	}
 }
+
+func TestIsCIDR(t *testing.T) {
+	grids := []struct {
+		cidr     string
+		expected bool
+	}{
+		{
+			cidr:     "192.168.0.103",
+			expected: false,
+		},
+		{
+			cidr:     "192.168.0.1/8",
+			expected: true,
+		},
+		{
+			cidr:     "192.168.0.1/16",
+			expected: true,
+		},
+		{
+			cidr:     "192.168.0.1/24",
+			expected: true,
+		},
+		{
+			cidr:     "192.168.0.1/32",
+			expected: true,
+		},
+	}
+
+	for _, grid := range grids {
+		assert.Equal(t, grid.expected, IsCIDR(grid.cidr))
+	}
+}
