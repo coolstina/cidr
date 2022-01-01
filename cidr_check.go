@@ -18,6 +18,8 @@ import (
 	"net"
 	"strconv"
 	"strings"
+
+	"github.com/coolstina/expression"
 )
 
 // CIDRIsContainsIPManualImpl Checks whether the IP is within a CIDR representation range.
@@ -60,4 +62,10 @@ func CIDRIsContainsIP(ip, cidr string) bool {
 	}
 
 	return ni.Contains(ipv4Addr)
+}
+
+// IsCIDR Check whether the IP is in CIDR format.
+func IsCIDR(ip string) bool {
+	ok, _ := expression.RegularMatchString(`\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}\/\d+`, ip)
+	return ok
 }
