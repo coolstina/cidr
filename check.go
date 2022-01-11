@@ -22,8 +22,8 @@ import (
 	"github.com/coolstina/expression"
 )
 
-// CIDRIsContainsIPManualImpl Checks whether the IP is within a CIDR representation range.
-func CIDRIsContainsIPManualImpl(addr, cidr string) bool {
+// IsContainsIPManualImpl CIDRIsContainsIPManualImpl Checks whether the IP is within a CIDR representation range.
+func IsContainsIPManualImpl(addr, cidr string) bool {
 	ipv4Addr := net.ParseIP(addr)
 	if ipv4Addr == nil {
 		return false
@@ -49,8 +49,8 @@ func CIDRIsContainsIPManualImpl(addr, cidr string) bool {
 	return false
 }
 
-// CIDRIsContainsIP reports whether the network includes ip.
-func CIDRIsContainsIP(ip, cidr string) bool {
+// IsContainsIP reports whether the network includes ip.
+func IsContainsIP(ip, cidr string) bool {
 	ipv4Addr := net.ParseIP(ip)
 	if ipv4Addr == nil {
 		return false

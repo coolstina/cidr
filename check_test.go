@@ -109,7 +109,7 @@ func TestCIDRIsContainsIPManualImpl(t *testing.T) {
 	}
 
 	for _, grid := range grids {
-		actual := CIDRIsContainsIPManualImpl(grid.ip, grid.cidr)
+		actual := IsContainsIPManualImpl(grid.ip, grid.cidr)
 		assert.Equal(t, grid.expected, actual)
 	}
 }
@@ -208,7 +208,7 @@ func TestCIDRIsContainsIP(t *testing.T) {
 	}
 
 	for _, grid := range grids {
-		actual := CIDRIsContainsIP(grid.ip, grid.cidr)
+		actual := IsContainsIP(grid.ip, grid.cidr)
 		assert.Equal(t, grid.expected, actual)
 	}
 }

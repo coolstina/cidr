@@ -20,6 +20,8 @@ import (
 	"net"
 	"strconv"
 	"strings"
+
+	"github.com/coolstina/osnet"
 )
 
 // CIDRClassType type definition.
@@ -88,34 +90,34 @@ func IPRangeToCIDR(ipStart string, ipEnd string) ([]string, error) {
 			0xFFFFFFE0, 0xFFFFFFF0, 0xFFFFFFF8,
 			0xFFFFFFFC, 0xFFFFFFFE, 0xFFFFFFFF,
 		}
-		ipStartUint32 = uint32(IPv4ToInt64(ipStart))
-		ipEndUint32   = uint32(IPv4ToInt64(ipEnd))
-		cidrs         = make([]string, 0)
+
+		is    = osnet.IPv4ToInt(ipStart)
+		ie    = osnet.IPv4ToInt(ipEnd)
+		cidrs = make([]string, 0)
 	)
 
-	if ipStartUint32 > ipEndUint32 {
+	if is > ie {
 		return nil, fmt.Errorf("start ip %s must be less than end ip %s", ipStart, ipEnd)
 	}
 
-	for ipEndUint32 >= ipStartUint32 {
+	for ie >= is {
 		maxSize := 32
 		for maxSize > 0 {
-			maskedBase := ipStartUint32 & cidr2mask[maxSize-1]
-			if maskedBase != ipStartUint32 {
+			maskedBase := is & cidr2mask[maxSize-1]
+			if maskedBase != is {
 				break
 			}
 			maxSize--
 		}
 
-		x := math.Log(float64(ipEndUint32-ipStartUint32+1)) / math.Log(2)
+		x := math.Log(float64(ie-is+1)) / math.Log(2)
 		maxDiff := 32 - int(math.Floor(x))
 		if maxSize < maxDiff {
 			maxSize = maxDiff
 		}
 
-		cidrs = append(cidrs, Int64ToIPv4(int64(ipStartUint32))+"/"+strconv.Itoa(maxSize))
-
-		ipStartUint32 += uint32(math.Exp2(float64(32 - maxSize)))
+		cidrs = append(cidrs, osnet.IntToIPv4(is)+"/"+strconv.Itoa(maxSize))
+		is += uint32(math.Exp2(float64(32 - maxSize)))
 	}
 
 	return cidrs, nil
@@ -138,7 +140,7 @@ func CIDRRangeToIPRange(cidrs []string) (ipStart string, ipEnd string, err error
 			return "", "", fmt.Errorf("cidr %s invalid", cidr)
 		}
 
-		ip = uint32(IPv4ToInt64(slice[0]))
+		ip = osnet.IPv4ToInt(slice[0])
 		bits, err := strconv.ParseUint(slice[1], 10, 32)
 		if err != nil {
 			continue
@@ -154,5 +156,5 @@ func CIDRRangeToIPRange(cidrs []string) (ipStart string, ipEnd string, err error
 		}
 	}
 
-	return Int64ToIPv4(int64(is)), Int64ToIPv4(int64(ie)), err
+	return osnet.IntToIPv4(is), osnet.IntToIPv4(ie), err
 }
