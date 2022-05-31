@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/coolstina/osnet"
+	"github.com/coolstina/fireness"
 )
 
 // CIDRClassType type definition.
@@ -91,8 +91,8 @@ func IPRangeToCIDR(ipStart string, ipEnd string) ([]string, error) {
 			0xFFFFFFFC, 0xFFFFFFFE, 0xFFFFFFFF,
 		}
 
-		is    = osnet.IPv4ToInt(ipStart)
-		ie    = osnet.IPv4ToInt(ipEnd)
+		is    = fireness.IPv4ToInt(ipStart)
+		ie    = fireness.IPv4ToInt(ipEnd)
 		cidrs = make([]string, 0)
 	)
 
@@ -116,7 +116,7 @@ func IPRangeToCIDR(ipStart string, ipEnd string) ([]string, error) {
 			maxSize = maxDiff
 		}
 
-		cidrs = append(cidrs, osnet.IntToIPv4(is)+"/"+strconv.Itoa(maxSize))
+		cidrs = append(cidrs, fireness.IntToIPv4(is)+"/"+strconv.Itoa(maxSize))
 		is += uint32(math.Exp2(float64(32 - maxSize)))
 	}
 
@@ -140,7 +140,7 @@ func CIDRRangeToIPRange(cidrs []string) (ipStart string, ipEnd string, err error
 			return "", "", fmt.Errorf("cidr %s invalid", cidr)
 		}
 
-		ip = osnet.IPv4ToInt(slice[0])
+		ip = fireness.IPv4ToInt(slice[0])
 		bits, err := strconv.ParseUint(slice[1], 10, 32)
 		if err != nil {
 			continue
@@ -156,5 +156,5 @@ func CIDRRangeToIPRange(cidrs []string) (ipStart string, ipEnd string, err error
 		}
 	}
 
-	return osnet.IntToIPv4(is), osnet.IntToIPv4(ie), err
+	return fireness.IntToIPv4(is), fireness.IntToIPv4(ie), err
 }
